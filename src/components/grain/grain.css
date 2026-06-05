@@ -1,0 +1,252 @@
+/* -------------------------------------------------------------------------- */
+/*  /grain — page-scoped Cinematic Dark.                                        */
+/*  蔵の闇: near-black, slightly warm. ONE accent: 米の白 (light).               */
+/*  All scoped under #grain-root so it cannot leak into the rest of the site.   */
+/* -------------------------------------------------------------------------- */
+
+#grain-root {
+  /* near-black, faintly warm — the dark granary (oklch L ~0.11) */
+  --grain-bg: oklch(0.11 0.008 70);
+  --grain-bg-deep: oklch(0.085 0.006 70);
+  /* the single accent — the white of rice = light */
+  --grain-white: oklch(0.96 0.012 85);
+  --grain-mute: oklch(0.62 0.012 80);
+  --grain-faint: oklch(0.42 0.01 75);
+
+  /* A TALL scroll document (no longer fixed). The grain is pinned via the
+     sticky stage below; the page itself scrolls so /grain is a real site, and
+     scroll becomes the second time axis (the passing of years + the day). */
+  position: relative;
+  width: 100%;
+  overflow-x: clip; /* never a horizontal scrollbar, any width */
+  background:
+    radial-gradient(
+      120% 90% at 62% 42%,
+      var(--grain-bg) 0%,
+      var(--grain-bg-deep) 70%,
+      #060504 100%
+    );
+  color: var(--grain-white);
+  font-family: var(--font-sans-stack);
+}
+
+/* The pinned stage: one viewport tall, sticky at the top, so the single grain
+   (canvas) and the persistent truth stay centred while the document scrolls.
+   This is the "scroll = choreography" pin done with position:sticky (SSR-safe,
+   no layout thrash) rather than a GSAP pin transform. */
+#grain-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* The static poster — ALWAYS present in SSR DOM beneath the canvas. If WebGL
+   never mounts (no support / reduced motion bail / boundary trip / headless),
+   this is the graceful fallback: dark granary + a single soft pool of light +
+   the truth line. Never a white empty box. */
+#grain-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* a single warm-white pool of light where the grain sits */
+  background: radial-gradient(
+    32% 38% at 50% 46%,
+    oklch(0.3 0.02 75 / 0.55) 0%,
+    oklch(0.16 0.012 72 / 0.25) 38%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* the procedurally-suggested grain silhouette in the poster (pure CSS, cheap) */
+#grain-poster::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: clamp(70px, 9vw, 130px);
+  height: clamp(150px, 19vw, 280px);
+  transform: translate(-50%, -50%) rotate(18deg);
+  border-radius: 50% / 42%;
+  background: radial-gradient(
+    60% 50% at 42% 34%,
+    oklch(0.82 0.02 85 / 0.9) 0%,
+    oklch(0.6 0.03 78 / 0.55) 40%,
+    oklch(0.34 0.03 70 / 0.3) 75%,
+    transparent 100%
+  );
+  filter: blur(1px);
+}
+
+/* The R3F canvas wrapper sits above the poster. When WebGL paints opaque, it
+   hides the poster; when it can't, alpha lets the poster read through. */
+#grain-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ---------------- Typography overlay (feedback-as-emergence) -----------------
+   No "動かしてみて" instruction. The truth + 阿部米穀 + a mono label. That's all.
+   The grain teaches the visitor by changing — we never narrate it. */
+
+#grain-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+#grain-overlay .grain-toprow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+#grain-overlay .grain-label {
+  font-family: var(--font-mono-stack);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grain-faint);
+}
+
+#grain-overlay .grain-truth {
+  max-width: 22ch;
+  margin-bottom: 0.6em;
+  font-family: var(--font-display-stack);
+  font-weight: 380;
+  font-size: clamp(1.55rem, 3.6vw, 3.1rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  color: var(--grain-white);
+  /* a breath of luminance, as if lit by the same lamp */
+  text-wrap: balance;
+}
+
+#grain-overlay .grain-truth em {
+  font-style: italic;
+  color: var(--grain-white);
+}
+
+#grain-overlay .grain-sign {
+  margin-top: 1.1em;
+  font-family: var(--font-mono-stack);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--grain-mute);
+}
+
+/* a hairline above the signature, not a box — restraint */
+#grain-overlay .grain-sign::before {
+  content: '';
+  display: inline-block;
+  width: 2.4rem;
+  height: 1px;
+  margin-right: 0.9rem;
+  vertical-align: middle;
+  background: var(--grain-faint);
+}
+
+/* ----------------- Inheritance flow (scroll = time) --------------------------
+   The grain stays pinned (sticky stage above). This flow scrolls PAST it; each
+   beat is one quiet Fraunces line that fades/rises via GSAP ScrollTrigger
+   (JS-driven — never CSS — because it is scroll-linked). The beats sit at the
+   start opacity 0; GrainScroll animates them. Under reduced motion / no-JS the
+   inline fallback (below) keeps them readable. */
+
+#grain-flow {
+  position: relative;
+  z-index: 4;
+  /* pulled up over the sticky stage so beats float on the pinned grain, not
+     below it. The stage is 100vh sticky; this negative margin lets the first
+     beat begin while the grain is still centred. */
+  margin-top: -100vh;
+  pointer-events: none;
+}
+
+#grain-flow .grain-beat {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(2rem, 8vw, 6rem);
+  /* JS sets opacity; this is just the resting transform origin. */
+  will-change: opacity, transform;
+}
+
+#grain-flow .grain-beat-en {
+  font-family: var(--font-mono-stack);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--grain-faint);
+  margin-bottom: 1.1em;
+}
+
+#grain-flow .grain-beat-ja {
+  max-width: 20ch;
+  font-family: var(--font-display-stack);
+  font-weight: 380;
+  font-size: clamp(1.6rem, 4.2vw, 3rem);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--grain-white);
+  text-wrap: balance;
+}
+
+#grain-flow .grain-beat-sign {
+  margin-top: 2.4em;
+  font-family: var(--font-mono-stack);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--grain-mute);
+}
+
+/* Entrance: the lamp comes up. Static-state fade only (NOT scroll-linked),
+   so a CSS keyframe is allowed here per the project rule. */
+@keyframes grain-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#grain-overlay .grain-truth,
+#grain-overlay .grain-sign,
+#grain-overlay .grain-toprow {
+  animation: grain-rise 1100ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1))
+    both;
+}
+#grain-overlay .grain-truth {
+  animation-delay: 220ms;
+}
+#grain-overlay .grain-sign {
+  animation-delay: 360ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #grain-overlay .grain-truth,
+  #grain-overlay .grain-sign,
+  #grain-overlay .grain-toprow {
+    animation: none;
+  }
+}

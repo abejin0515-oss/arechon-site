@@ -1,0 +1,24 @@
+import { chromium } from "playwright";
+import { mkdirSync } from "node:fs";
+const OUT = "C:\\Users\\Jin\\projects\\arechon-site\\.shots";
+mkdirSync(OUT, { recursive: true });
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const errs = [];
+page.on("console", (m) => { if (m.type() === "error") errs.push(m.text()); });
+await page.goto("http://localhost:3000/grain?webgl=force", { waitUntil: "load", timeout: 60000 });
+await page.waitForTimeout(2500);
+await page.mouse.move(200, 200);
+await page.waitForTimeout(800);
+await page.screenshot({ path: `${OUT}/grain-s-top.png` });
+const dims = await page.evaluate(() => ({ doc: document.documentElement.scrollHeight, vh: window.innerHeight }));
+// scroll ~ 55%
+await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight * 0.5, behavior: "instant" }));
+await page.waitForTimeout(1600);
+await page.screenshot({ path: `${OUT}/grain-s-mid.png` });
+await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+await page.waitForTimeout(1600);
+await page.screenshot({ path: `${OUT}/grain-s-bottom.png` });
+console.log("DIMS " + JSON.stringify(dims) + " scrollable=" + (dims.doc > dims.vh));
+console.log("ERRORS " + JSON.stringify(errs.slice(0, 5)));
+await browser.close();

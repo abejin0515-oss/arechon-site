@@ -1,0 +1,190 @@
+/* MOTION — /motion comparison page (built 2026-06-04).
+ *
+ * "実写真＋動き > 自作3D" を1秒で判定させる比較ページ。同じ1枚を3つの動きで。
+ * 美学 = Cinematic Dark / restraint。写真が主役。装飾を足さない。
+ *
+ * Page-scoped, forced-dark identity (same pattern as showcase.css): re-declare
+ * the dark tokens on .motion-root and force the document floor dark via :has()
+ * so a light-mode OS never paints white over the page.
+ */
+
+html:has(.motion-root) {
+  background: oklch(0.13 0.008 260);
+}
+html:has(.motion-root) body {
+  background: oklch(0.13 0.008 260);
+}
+
+.motion-root {
+  --bg: oklch(0.13 0.008 260);
+  --fg: oklch(0.95 0.003 95);
+  --muted: oklch(0.66 0.01 260);
+  --border: oklch(0.22 0.008 260);
+
+  position: relative;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--fg);
+  /* No horizontal overflow, ever (390px guard). */
+  overflow-x: hidden;
+}
+
+/* ---------- Hero ---------- */
+
+.motion-hero {
+  max-width: var(--container-editorial, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--pad-x, clamp(1.25rem, 4vw, 4rem));
+  padding-block: clamp(5rem, 16vh, 11rem) clamp(2.5rem, 6vh, 4rem);
+}
+
+.motion-hero__eyebrow {
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.motion-hero__title {
+  font-family: var(--font-display-stack, ui-serif, Georgia, serif);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 9vw, 7rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.motion-hero__lede {
+  max-width: 52ch;
+  margin-top: 1.75rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.1vw, 1.125rem);
+  line-height: 1.65;
+}
+
+/* ---------- Section ---------- */
+
+.motion-section {
+  max-width: var(--container-editorial, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--pad-x, clamp(1.25rem, 4vw, 4rem));
+  padding-block: clamp(2.5rem, 7vh, 5rem);
+}
+
+.motion-section__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 1rem;
+  row-gap: 0.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.motion-section__index {
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.motion-section__label {
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--fg);
+}
+
+.motion-section__desc {
+  grid-column: 2;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ---------- Stage ---------- */
+
+.motion-section__stage {
+  width: 100%;
+}
+
+.motion-stage {
+  position: relative;
+  width: 100%;
+  /* 4:3 photo; cap height so two stages fit a tall viewport for comparison. */
+  aspect-ratio: 4 / 3;
+  max-height: min(74vh, 680px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: oklch(0.16 0.01 260); /* dark floor while poster/GL resolves */
+  /* contain layout so the absolutely-positioned canvas can't cause page scroll */
+  contain: layout paint;
+}
+
+.motion-stage__poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  transition: opacity 320ms ease;
+  /* The static poster gets the same look via the grade overlay below; this keeps
+     a touch of the cinematic feel even if WebGL never mounts. */
+  filter: saturate(0.9) contrast(1.04) brightness(0.97);
+}
+
+/* CSS grain + vignette overlay — guarantees the static fallback never reads as a
+   raw <img>. Subtle. The WebGL grade matches this so the swap is invisible. */
+.motion-stage__grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* vignette */
+  background:
+    radial-gradient(120% 100% at 50% 45%, transparent 45%, oklch(0.05 0 0 / 0.5) 100%);
+  mix-blend-mode: normal;
+}
+.motion-stage__grade::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* tiny SVG fractal-noise grain, static (idle decoration → CSS is fine here) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+/* When GL is painting, drop the CSS grade so we don't double the grain/vignette
+   (the shader already applies its own). */
+.motion-stage[data-gl-ready='1'] .motion-stage__grade {
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+/* ---------- Footer ---------- */
+
+.motion-foot {
+  max-width: var(--container-editorial, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--pad-x, clamp(1.25rem, 4vw, 4rem));
+  padding-block: clamp(3rem, 8vh, 6rem);
+  border-top: 1px solid var(--border);
+  margin-top: clamp(2rem, 5vh, 4rem);
+}
+.motion-foot__mono {
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* ---------- Reduced motion ---------- */
+/* The scenes self-disable via useWebGLSupport (reduced-motion → static poster).
+   We also freeze the CSS grain so nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .motion-stage__poster {
+    opacity: 1 !important;
+  }
+}

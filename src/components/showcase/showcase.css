@@ -1,0 +1,323 @@
+/* SHOWCASE — /showcase technique catalog (built 2026-06-03).
+ * A self-contained dark "静かな高級" microsite that demos all 13 acquired
+ * world-class techniques live. Route: src/app/showcase/{layout,page}.tsx →
+ * src/components/showcase/Showcase.tsx.
+ *
+ * Showcase — page-scoped identity.
+ *
+ * Re-declares the design-token custom properties on .showcase-root so the whole
+ * page renders in the forced-dark "静かな高級" canvas REGARDLESS of the OS
+ * light/dark setting — without touching globals.css (the homepage keeps its
+ * @media-driven light/dark). Because Tailwind v4 maps --color-* -> var(--*),
+ * every token utility (bg-bg, text-fg, border-border, .type-*, ::selection)
+ * inside this subtree flips dark automatically.
+ */
+
+/* Force the DOCUMENT base dark on the showcase route, even under a light-mode OS.
+ * Why this is required (not cosmetic):
+ *   globals.css sets `html, body { background: var(--bg) }`, and in light mode
+ *   --bg is near-white. The showcase's dark look comes from the fixed
+ *   AtmosphereBackground canvas + the .showcase-root::before floor, both at
+ *   NEGATIVE z-index. Per CSS paint order, negative-z layers are painted BEFORE
+ *   an in-flow block's background — so a light-mode <body> background paints
+ *   OVER them and the whole page reads as white, making the light text invisible
+ *   ("blank content"). Fix: give <html> the dark floor and make <body>
+ *   transparent so the negative-z atmosphere shows through. Scoped to the
+ *   showcase via :has() so the homepage's light/dark behavior is untouched. */
+html:has(.showcase-root) {
+  background: oklch(0.14 0.008 260); /* == showcase --bg; the guaranteed dark floor */
+}
+html:has(.showcase-root) body {
+  background: transparent; /* let the fixed atmosphere (z-index:-1) show through */
+}
+
+.showcase-root {
+  /* dark token values (copied from globals.css @media dark) */
+  --bg: oklch(0.14 0.008 260);
+  --fg: oklch(0.96 0.003 95);
+  --muted: oklch(0.72 0.01 260);
+  --border: oklch(0.24 0.008 260);
+  --surface: oklch(0.18 0.008 260);
+  --accent: oklch(0.74 0.19 32);
+  --accent-fg: oklch(0.14 0.008 260);
+  --on-accent: oklch(0.14 0.008 260);
+
+  position: relative;
+  min-height: 100svh;
+  /* transparent so the fixed AtmosphereBackground (z-index:-1) shows through;
+     fall back to --bg where WebGL is unavailable. */
+  background: transparent;
+  color: var(--fg);
+}
+
+/* Solid base behind everything so the page is never pure black if the WebGL
+   canvas fails to paint (the Atmosphere wrapper also paints a CSS gradient,
+   but this guarantees a floor). */
+.showcase-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(1200px 800px at 70% 20%, oklch(0.2 0.03 250 / 0.6), transparent 60%),
+    var(--bg);
+  pointer-events: none;
+}
+
+/* ---- Section rhythm ---- */
+
+.showcase-section {
+  padding-block: clamp(5rem, 12vh, 9rem);
+  border-top: 1px solid var(--border);
+}
+.showcase-section:first-of-type {
+  border-top: none;
+}
+
+.showcase-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+.showcase-section__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--muted);
+}
+
+.showcase-section__index {
+  color: var(--accent);
+}
+
+.showcase-section__tag {
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  letter-spacing: 0.08em;
+}
+
+.showcase-section__desc {
+  max-width: 46ch;
+  color: var(--muted);
+}
+
+/* Full-bleed escape from the editorial container for pinned/cover demos. */
+.showcase-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Demo surface card for inline (non-bleed) demos. */
+.showcase-stage {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: oklch(0.18 0.008 260 / 0.5);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+/* Fixed sound toggle, top-right. */
+.showcase-soundtoggle {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 60;
+}
+
+/* Sized stages — ParallaxImage / DistortionImageHero size to their frame's
+   height (their inner image is height:100%), so the frame MUST have a height. */
+.showcase-media-stage {
+  height: min(80vh, 620px);
+}
+
+/* Full-viewport scene used inside ScrollWorldTransition. */
+.showcase-scene {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: var(--pad-x);
+}
+
+/* Magnetic-button visual. */
+.showcase-magnet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.showcase-magnet--ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--border);
+}
+
+/* Page hero header. */
+.showcase-hero {
+  padding-block: clamp(7rem, 22vh, 14rem) clamp(2.5rem, 6vh, 4.5rem);
+}
+
+/* Eyebrow — one of the THREE sanctioned accent touches: a short accent rule
+   precedes the label (the other two are the hero "。" and the 94% stat). */
+.showcase-hero__eyebrow,
+.showcase-chapter__index {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  color: var(--accent);
+}
+.showcase-hero__eyebrow {
+  margin-bottom: 1.25rem;
+}
+.showcase-hero__eyebrow::before {
+  content: "";
+  width: clamp(24px, 5vw, 44px);
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+
+.showcase-hero__lede {
+  max-width: 52ch;
+  margin-top: 1.75rem;
+  color: var(--muted);
+}
+
+/* Hero headline — char-split kinetic. Mobile lower bound prevents the long
+   Japanese line from overflowing on narrow screens. */
+.showcase-hero__title {
+  font-size: clamp(3.2rem, 13.5vw, 14rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+/* PHASE B ② — accent の一閃. Only the FINAL character of the hero title (the
+   "。") lights accent and flares ONCE on load. The kinetic units are each
+   wrapped in their own mask <span>, so we must target the [data-kinetic-unit]
+   inside the LAST wrapper span — NOT `[data-kinetic-unit]:last-of-type`, which
+   would match every unit (each is the only one inside its own wrapper). */
+.showcase-hero__title > span:last-of-type [data-kinetic-unit] {
+  color: var(--accent);
+  text-shadow: 0 0 0.04em color-mix(in oklch, var(--accent) 55%, transparent);
+  animation: accent-flare 1.1s ease-out 0.7s 1 both;
+}
+
+@keyframes accent-flare {
+  0% {
+    text-shadow:
+      0 0 0.5em color-mix(in oklch, var(--accent) 90%, transparent),
+      0 0 1.1em color-mix(in oklch, var(--accent) 60%, transparent);
+    filter: brightness(1.45);
+  }
+  100% {
+    text-shadow: 0 0 0.04em color-mix(in oklch, var(--accent) 55%, transparent);
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-hero__title > span:last-of-type [data-kinetic-unit] {
+    animation: none;
+  }
+}
+
+/* PHASE B ③ — Distortion hero feature: the full-bleed 看板 under the hero.
+   No label chrome; the visual is the statement. First scroll always meets it. */
+.showcase-hero-feature {
+  margin-block: clamp(2rem, 6vh, 4.5rem) clamp(4rem, 10vh, 7rem);
+}
+.showcase-hero-feature__canvas {
+  width: 100%;
+  height: min(86vh, 720px);
+  display: block;
+  background: oklch(0.16 0.01 250); /* dark floor while the GL/poster resolves */
+}
+.showcase-hero-feature__cap {
+  /* sits just inside the bleed gutter */
+  margin: 0.9rem auto 0;
+  padding-inline: var(--pad-x, 1.5rem);
+  max-width: var(--container-editorial, 72rem);
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+/* PHASE B ④ — Chapter spine. Four big act-headings break the flat catalog. */
+.showcase-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-block: clamp(5rem, 14vh, 10rem) clamp(1rem, 3vh, 2rem);
+  border-top: 1px solid var(--border);
+}
+.showcase-chapter__index {
+  /* index inherits the accent eyebrow treatment above */
+  margin-bottom: 0.25rem;
+}
+.showcase-chapter__index::before {
+  content: "";
+  width: clamp(24px, 5vw, 44px);
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+.showcase-chapter__title {
+  letter-spacing: -0.01em;
+}
+.showcase-chapter__lede {
+  max-width: 48ch;
+  color: var(--muted);
+}
+/* A chapter heading already draws the divider; the technique section that
+   follows it shouldn't double the rule. */
+.showcase-chapter + .showcase-section {
+  border-top: none;
+}
+
+/* Bare interlude section — no catalog header, the pinned demo fills the act. */
+.showcase-section--bare {
+  padding-block: 0;
+  border-top: none;
+}
+
+/* Physics arena keeps a guaranteed dark floor even if the canvas is mid-init. */
+.showcase-physics-stage {
+  background: oklch(0.16 0.01 250);
+}
+
+/* PHASE B ⑤ — the single accent number (リピート率 94%). Only the value glows;
+   label + narrative stay muted so the figure carries the weight. The StatBlock
+   renders <figcaption.sr-only> then three <span> (label, number, narrative);
+   the number is the 2nd span. */
+.showcase-stat--accent span:nth-of-type(2) {
+  color: var(--accent);
+}
+
+/* DataViz grid. */
+.showcase-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* Opening curtain (#intro-curtain) styles moved to the self-contained technique:
+ * @/components/techniques/loading-sequence/loading-sequence.css
+ * (imported once in src/app/showcase/layout.tsx). */

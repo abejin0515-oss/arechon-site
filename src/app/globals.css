@@ -1,26 +1,320 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------- Design Tokens (Art Director Spec) ---------- */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  /* Color — Light */
+  --bg: oklch(0.985 0.002 95);
+  --fg: oklch(0.18 0.01 260);
+  --muted: oklch(0.42 0.012 260);
+  --border: oklch(0.92 0.004 260);
+  --surface: oklch(0.96 0.003 95);
+  --accent: oklch(0.55 0.21 28);
+  --accent-fg: oklch(0.985 0.002 95);
+  --on-accent: oklch(0.16 0.01 260);
+
+  /* Type scale — pushed up for SOTD-tier presence (14vw display, 7vw h1) */
+  --font-display: clamp(4.5rem, 14vw, 14rem);
+  --font-h1: clamp(2.75rem, 7vw, 6.5rem);
+  --font-h2: clamp(1.75rem, 3.5vw, 2.75rem);
+  --font-h3: clamp(1.25rem, 2vw, 1.5rem);
+  --font-body: clamp(1rem, 1.1vw, 1.125rem);
+  --font-small: 0.8125rem;
+  --font-mono-size: 0.75rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-48: 12rem;
+  --space-64: 16rem;
+
+  /* Layout */
+  --container-editorial: 1440px;
+  --container-reading: 680px;
+  --pad-x: clamp(1.25rem, 4vw, 4rem);
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur-micro: 180ms;
+  --dur-standard: 600ms;
+  --dur-hero: 1200ms;
+  --dur-page: 800ms;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: oklch(0.14 0.008 260);
+    --fg: oklch(0.96 0.003 95);
+    --muted: oklch(0.72 0.01 260);
+    --border: oklch(0.24 0.008 260);
+    --surface: oklch(0.18 0.008 260);
+    --accent: oklch(0.74 0.19 32);
+    --accent-fg: oklch(0.14 0.008 260);
+    --on-accent: oklch(0.14 0.008 260);
   }
 }
 
+/* ---------- Tailwind v4 Theme Mapping ---------- */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-on-accent: var(--on-accent);
+
+  --font-display: var(--font-display-stack);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "palt" 1;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans-stack, ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--font-body);
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* ---------- Typography Utilities ---------- */
+
+.font-display {
+  font-family: var(--font-display-stack, ui-serif, Georgia, serif);
+  font-optical-sizing: auto;
+}
+
+.font-mono-accent {
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: var(--font-mono-size);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.type-display {
+  font-family: var(--font-display-stack, ui-serif, Georgia, serif);
+  font-size: var(--font-display);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  font-optical-sizing: auto;
+}
+
+.type-h1 {
+  font-size: var(--font-h1);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.type-h2 {
+  font-size: var(--font-h2);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.type-h3 {
+  font-size: var(--font-h3);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+.type-body {
+  font-size: var(--font-body);
+  line-height: 1.6;
+}
+
+.type-small {
+  font-size: var(--font-small);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+:lang(ja) {
+  word-break: auto-phrase;
+  line-break: strict;
+  text-spacing-trim: trim-start;
+}
+
+/* ---------- Layout Utilities ---------- */
+
+.container-editorial {
+  width: 100%;
+  max-width: var(--container-editorial);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+.container-reading {
+  width: 100%;
+  max-width: var(--container-reading);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+
+/* ---------- Motion (with reduced-motion fallback) ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 200ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 200ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Underline animation for inline links */
+.link-underline {
+  position: relative;
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.1em;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 400ms var(--ease-out-expo);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Focus visibility (a11y) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Skip-to-content link */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.625rem 1rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-mono-stack, ui-monospace, monospace);
+  font-size: var(--font-mono-size);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: top 180ms var(--ease-out-expo);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 1rem;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* sr-only utility (visually hidden but accessible) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Nav focus isolation — escape mix-blend-difference so outline always reads */
+nav a:focus-visible,
+header a:focus-visible {
+  isolation: isolate;
+}
+
+/* ---------- Reveal animations (CSS-only, replaces Framer Motion) ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 600ms var(--ease-out-expo),
+    transform 600ms var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.mask-line-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 1200ms var(--ease-out-expo);
+  will-change: transform;
+}
+.mask-line.is-in .mask-line-inner {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 200ms ease;
+  }
+  .mask-line {
+    overflow: visible;
+  }
+  .mask-line-inner {
+    transform: none;
+    transition: opacity 200ms ease;
+  }
 }
