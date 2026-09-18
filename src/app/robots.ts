@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
-const SITE = "https://arechon.dev";
+import { SITE_URL } from "@/lib/site";
+
+const SITE = SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {

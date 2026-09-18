@@ -1,4 +1,6 @@
-const SITE = "https://arechon.dev";
+import { SITE_URL } from "@/lib/site";
+
+const SITE = SITE_URL;
 
 const data = {
   "@context": "https://schema.org",

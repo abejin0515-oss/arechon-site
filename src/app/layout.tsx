@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
+import { SITE_URL } from "@/lib/site";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -48,7 +49,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arechon.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Arechon — Web制作・AI活用 / 仙台",
     template: "%s · Arechon",
@@ -62,26 +63,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ja_JP",
     alternateLocale: "en_US",
-    url: "https://arechon.dev",
+    url: SITE_URL,
     siteName: "Arechon",
     title: "Arechon — Web制作・AI活用 / 仙台",
     description:
       "仙台拠点の個人事業。Claude Code 活用の Web 制作スタジオ。",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Arechon",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Arechon — Web制作・AI活用 / 仙台",
     description:
       "仙台拠点の個人事業。Claude Code 活用の Web 制作スタジオ。",
-    images: ["/og.png"],
   },
   robots: {
     index: true,

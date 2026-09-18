@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { SITE_HOST } from "@/lib/site";
 
 export const alt = "Arechon — Web制作・AI活用 / 仙台";
 export const size = { width: 1200, height: 630 };
@@ -86,7 +87,7 @@ export default function OG() {
             textTransform: "uppercase",
           }}
         >
-          <div>arechon.dev</div>
+          <div>{SITE_HOST}</div>
           <div style={{ color: "#E86E2F" }}>● ONE-LINE TO START</div>
         </div>
       </div>
