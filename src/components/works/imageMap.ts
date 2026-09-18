@@ -1,25 +1,23 @@
 /**
  * Slug → image URL map for the WebGL Works gallery.
  *
- * Picsum `/id/{n}` URLs are deterministic — each ID maps to a specific photo
- * in the curated catalog, so we get visually-strong, predictable images
- * without sourcing rights friction. Real photography slots in by replacing
- * values when the owner ships them.
+ * These are real screenshots of the pages in this repository, served from
+ * /public. They used to be remote picsum.photos URLs, which meant two
+ * problems: the gallery showed stock photography that had nothing to do
+ * with the work, and a blocked or slow picsum made useTexture throw —
+ * taking the whole homepage down with it (see WorksMount's boundary).
  *
- * Sizes target ~1600×1200 — sized for full-bleed retina rendering inside
- * a ~600×450 card after the cover-fit + parallax-window crop.
+ * Captured at 1600×1200 with Playwright against a production build.
  */
 export const workImages: Record<string, string> = {
-  // ID 1018 — dramatic mountain landscape, fits 庄内/agricultural mood
-  "abe-beikoku": "https://picsum.photos/id/1018/1600/1200",
-  // ID 1015 — moody valley, abstract-tech feel for AI ops
-  "arechon-ops": "https://picsum.photos/id/1015/1600/1200",
+  "arechon-site": "/works/arechon-site.jpg",
+  showcase: "/works/showcase.jpg",
+  motion: "/works/motion.jpg",
+  grain: "/works/grain.jpg",
+  field: "/works/field.jpg",
 };
 
-/** Returns a stable image URL for a work slug. Falls back to a neutral seed. */
+/** Returns a stable image URL for a work slug. */
 export function getWorkImage(slug: string): string {
-  return (
-    workImages[slug] ??
-    `https://picsum.photos/seed/arechon-${encodeURIComponent(slug)}/1600/1200`
-  );
+  return workImages[slug] ?? "/works/arechon-site.jpg";
 }

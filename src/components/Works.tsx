@@ -33,7 +33,7 @@ export function Works() {
           </div>
           <div className="col-span-12 sm:col-span-9">
             <Reveal as="h2" className="font-display type-h1 max-w-[18ch]">
-              実績は、語るより並べる。
+              作ったものを、並べる。
             </Reveal>
           </div>
         </div>
