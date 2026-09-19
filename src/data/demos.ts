@@ -87,7 +87,7 @@ export const demos: Demo[] = [
     summary:
       "写真を主役にした1ページ。Canvas で木漏れ日の光を動かしつつ、JS が無効でも本文が読める構造にしてある。",
     stack: ["HTML5", "CSS", "Canvas"],
-    href: "https://cafe-demo.vercel.app",
+    href: "https://cafe-demo-gamma-ebon.vercel.app",
   },
   {
     category: "コーポレートサイト",
