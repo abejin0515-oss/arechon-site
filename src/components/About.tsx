@@ -1,10 +1,10 @@
 import { Reveal } from "./Reveal";
 
 const facts = [
-  { k: "Founded", v: "2025, Sendai" },
-  { k: "Model", v: "個人事業 / Solo operator" },
-  { k: "Stack", v: "Next.js / Tailwind / Claude Code" },
-  { k: "Languages", v: "Japanese (native), English (working)" },
+  { k: "Base", v: "仙台 / Sendai, JP" },
+  { k: "Role", v: "企画・指示設計・検証・公開" },
+  { k: "Tools", v: "Claude Code / Next.js / Vercel" },
+  { k: "Background", v: "エンジニア経験なし" },
 ];
 
 export function About() {
@@ -19,24 +19,23 @@ export function About() {
         </div>
         <div className="col-span-12 sm:col-span-9">
           <Reveal as="h2" className="font-display type-h1 max-w-[20ch] mb-12">
-            個人で、深く、長く付き合う。
+            エンジニア経験なしで、ここまで。
           </Reveal>
           <Reveal>
             <p className="type-body max-w-[var(--container-reading)] text-[var(--fg)]/90 mb-6">
-              Arechon は仙台拠点の個人事業です。
-              制作の意思決定から実装、運用までを一人で握り、
-              判断のスピードと、約束した期日への責任を両立しています。
+              Arechon は仙台で一人でやっている制作プロジェクトです。
+              企画・構成・文章・公開の判断は自分で決め、
+              実装は AI コーディングツール（Claude Code）に任せています。
             </p>
             <p className="type-body max-w-[var(--container-reading)] text-[var(--fg)]/90 mb-6">
-              裏側では Claude Code を本気で運用しています。
-              リサーチ・コピー下書き・コードレビュー・品質監査を
-              専門の AI エージェントに任せ、人間の判断にだけ集中する設計です。
-              何を AI に任せ、何を自分で握るかの線引きは、いつも明確にしています。
+              AI に任せているのは、リサーチ、実装、リファクタ、品質監査。
+              自分が握っているのは、何を作るか、どこで妥協しないか、いつ公開するか。
+              この線引きを毎回文章にしてから、作業に入っています。
             </p>
             <p className="type-body max-w-[var(--container-reading)] text-[var(--fg)]/90 mb-12">
-              得意なのは、地方の中小企業の Web。
-              テンプレで済ますのではなく、事業の文脈を聞き出し、
-              検索される構造・問い合わせが来る導線・更新できる仕組みまで含めて作ります。
+              このサイト自体が、その進め方で作った成果物です。
+              使ったエージェント定義と設計ドキュメントはリポジトリに残してあり、
+              同じ手順を別のサイトでもそのまま回せる状態にしています。
             </p>
           </Reveal>
 

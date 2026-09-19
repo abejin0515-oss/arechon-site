@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
+import { SITE_URL } from "@/lib/site";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -48,40 +49,31 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arechon.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Arechon — Web制作・AI活用 / 仙台",
+    default: "Arechon — Claude Code で作ったポートフォリオ / 仙台",
     template: "%s · Arechon",
   },
   description:
-    "仙台拠点の個人事業。Claude Code を活用した高速・高品質な Web 制作と、AI 組織による裏側運用で、地方中小企業のオンライン基盤を作ります。",
-  keywords: ["Web制作", "仙台", "Claude Code", "Next.js", "AI", "ポートフォリオ"],
+    "エンジニア経験なしで、AI コーディングツール（Claude Code）に指示を出して個人で作った Web ポートフォリオ。指示の設計から検証、公開までの進め方をサイト自体で公開しています。",
+  keywords: ["ポートフォリオ", "Claude Code", "AI", "個人開発", "Next.js", "仙台"],
   authors: [{ name: "Arechon" }],
   creator: "Arechon",
   openGraph: {
     type: "website",
     locale: "ja_JP",
     alternateLocale: "en_US",
-    url: "https://arechon.dev",
+    url: SITE_URL,
     siteName: "Arechon",
-    title: "Arechon — Web制作・AI活用 / 仙台",
+    title: "Arechon — Claude Code で作ったポートフォリオ / 仙台",
     description:
-      "仙台拠点の個人事業。Claude Code 活用の Web 制作スタジオ。",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Arechon",
-      },
-    ],
+      "Claude Code に指示を出して個人で作った Web ポートフォリオ。",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arechon — Web制作・AI活用 / 仙台",
+    title: "Arechon — Claude Code で作ったポートフォリオ / 仙台",
     description:
-      "仙台拠点の個人事業。Claude Code 活用の Web 制作スタジオ。",
-    images: ["/og.png"],
+      "Claude Code に指示を出して個人で作った Web ポートフォリオ。",
   },
   robots: {
     index: true,

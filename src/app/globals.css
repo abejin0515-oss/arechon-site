@@ -14,8 +14,8 @@
   --on-accent: oklch(0.16 0.01 260);
 
   /* Type scale — pushed up for SOTD-tier presence (14vw display, 7vw h1) */
-  --font-display: clamp(4.5rem, 14vw, 14rem);
-  --font-h1: clamp(2.75rem, 7vw, 6.5rem);
+  --font-display: clamp(3.5rem, 10vw, 9rem);
+  --font-h1: clamp(2.5rem, 6vw, 5rem);
   --font-h2: clamp(1.75rem, 3.5vw, 2.75rem);
   --font-h3: clamp(1.25rem, 2vw, 1.5rem);
   --font-body: clamp(1rem, 1.1vw, 1.125rem);
@@ -172,6 +172,21 @@ body {
   text-spacing-trim: trim-start;
 }
 
+/*
+ * Japanese glyphs fill the full em box, so the Latin-tuned leading on the
+ * two tightest scales (display 0.92, h1 1.0) makes consecutive lines
+ * collide. Loosen them for Japanese text only — Latin keeps the spec.
+ */
+:lang(ja) .type-display,
+:lang(ja).type-display {
+  line-height: 1.06;
+}
+
+:lang(ja) .type-h1,
+:lang(ja).type-h1 {
+  line-height: 1.12;
+}
+
 /* ---------- Layout Utilities ---------- */
 
 .container-editorial {
@@ -205,8 +220,19 @@ body {
 .link-underline {
   position: relative;
   display: inline-block;
-  color: inherit;
   text-decoration: none;
+}
+/*
+ * In the components layer so a Tailwind text-color utility on the same
+ * element still wins. Unlayered, `.link-underline { color: inherit }` beat
+ * every utility — unlayered CSS outranks Tailwind's utilities layer whatever
+ * the specificity — which silently killed the accent on the one link that
+ * asks for it.
+ */
+@layer components {
+  .link-underline {
+    color: inherit;
+  }
 }
 .link-underline::after {
   content: "";

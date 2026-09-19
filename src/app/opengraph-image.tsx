@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
+import { SITE_HOST } from "@/lib/site";
 
-export const alt = "Arechon — Web制作・AI活用 / 仙台";
+export const alt = "Arechon — Claude Code で作ったポートフォリオ / 仙台";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -59,8 +60,8 @@ export default function OG() {
               flexDirection: "column",
             }}
           >
-            <span>静かに、速く、</span>
-            <span>確実に届ける。</span>
+            <span>作ったのは、</span>
+            <span>指示の設計。</span>
           </div>
           <div
             style={{
@@ -70,7 +71,7 @@ export default function OG() {
               maxWidth: 880,
             }}
           >
-            Claude Code 活用の独立 Web スタジオ。
+            Claude Code に指示を出して個人で作ったポートフォリオ。
           </div>
         </div>
 
@@ -86,8 +87,8 @@ export default function OG() {
             textTransform: "uppercase",
           }}
         >
-          <div>arechon.dev</div>
-          <div style={{ color: "#E86E2F" }}>● ONE-LINE TO START</div>
+          <div>{SITE_HOST}</div>
+          <div style={{ color: "#E86E2F" }}>● BUILT WITH CLAUDE CODE</div>
         </div>
       </div>
     ),

@@ -12,23 +12,23 @@ type Step = {
 const STEPS: readonly Step[] = [
   {
     index: "01",
-    name: "Listen",
-    body: "事業の文脈を聞き、勝ち筋を見つける。提案ではなく、診断から始める。",
+    name: "Direct",
+    body: "作るものを先に言葉で固定する。色・文字・余白・動きの値まで design-system.md に書き切ってから、実装の指示を出す。",
   },
   {
     index: "02",
-    name: "Build",
-    body: "Next.js + Tailwind v4 を素早く、正しく組む。Claude Code でレビューを並列化。",
+    name: "Generate",
+    body: "役割を分けた3つのエージェントに実装させる。渡すのは仕様、返ってくるのは動く production code。",
   },
   {
     index: "03",
-    name: "Operate",
-    body: "月7,500円の薄保守。ドメイン管理から障害対応まで一括で受け持つ。",
+    name: "Audit",
+    body: "品質監査エージェントが P0 / P1 / P2 で指摘を返す。ship の判定が出るまで公開しない。",
   },
   {
     index: "04",
-    name: "Grow",
-    body: "アクセス解析からコピー改善まで、3ヶ月後の数字に責任を持つ。",
+    name: "Ship",
+    body: "公開して終わりにしない。崩れた箇所を次の指示に反映して、手順そのものを直す。",
   },
 ] as const;
 

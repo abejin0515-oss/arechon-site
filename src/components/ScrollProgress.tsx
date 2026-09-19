@@ -4,17 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 const sections = [
   { id: "top", label: "Hero" },
-  { id: "manifesto", label: "Manifesto" },
   { id: "operations", label: "Operations" },
   { id: "works", label: "Works" },
+  { id: "demos", label: "Index" },
   { id: "process", label: "Process" },
   { id: "about", label: "About" },
   { id: "faq", label: "FAQ" },
-  { id: "contact", label: "Contact" },
+  { id: "source", label: "Source" },
 ];
 
 /**
- * Top-right scroll indicator. Two lines:
+ * Bottom-right scroll indicator. Two lines:
  *   - Current section label (updated via IntersectionObserver)
  *   - Progress bar 0..100% of document scroll
  *
@@ -74,7 +74,7 @@ export function ScrollProgress() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed right-6 top-6 z-40 hidden sm:flex flex-col items-end gap-2 mix-blend-difference text-white"
+      className="pointer-events-none fixed right-6 bottom-6 z-40 hidden sm:flex flex-col items-end gap-2 mix-blend-difference text-white"
     >
       <div className="font-mono-accent text-[10px] leading-none">
         <span className="opacity-60">SECTION / </span>

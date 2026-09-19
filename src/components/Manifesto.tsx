@@ -9,9 +9,9 @@ type Statement = {
 };
 
 const STATEMENTS: readonly Statement[] = [
-  { eyebrow: "01 — 引き受けない", headline: "テンプレートと、規制業種。" },
-  { eyebrow: "02 — 約束する", headline: "返信は、一営業日以内。" },
-  { eyebrow: "03 — 続ける", headline: "納品が、はじまり。" },
+  { eyebrow: "01 — 任せる", headline: "調査も実装も、AIに。" },
+  { eyebrow: "02 — 決める", headline: "何を作るかは、人が。" },
+  { eyebrow: "03 — 疑う", headline: "出力は、必ず試す。" },
 ] as const;
 
 const MOBILE_BREAKPOINT_PX = 768;
