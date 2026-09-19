@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { Manifesto } from "@/components/Manifesto";
 import { Operations } from "@/components/Operations";
 import { Works } from "@/components/Works";
+import { DemoIndex } from "@/components/DemoIndex";
 import { Process } from "@/components/Process";
 import { About } from "@/components/About";
 import { FAQ } from "@/components/FAQ";
@@ -27,6 +28,7 @@ export default function Home() {
         <Manifesto />
         <Operations />
         <Works />
+        <DemoIndex />
         <Process />
         <About />
         <FAQ />
