@@ -46,12 +46,14 @@ Vercel Web Analytics も未導入なので、流入は計測していない。
 | パス | 内容 |
 |---|---|
 | `/` | サイト本体。Hero / Manifesto / Operations / Works / Process / About / FAQ / Source |
+| [archeon-proofs.vercel.app](https://archeon-proofs.vercel.app) | 画像を一枚も使わずコードだけで作った表現の実験集（別デプロイ、8点） |
 | `/showcase` | 参照サイトから抽出した13の演出を、動くコンポーネントとして並べた検証ページ |
 | `/motion` | 同じ流体ゆがみシェーダーを質感の違う3枚の写真に当てて比較する検証ページ |
 | `/grain` | 米屋を題材にした1ページ完結のコンセプトサイト |
 | `/field` | 写真も3Dモデルも使わず、カーソルで揺れる流体を生成するヒーロー表現 |
 
-Works セクションのサムネイルは、本番ビルドに対して Playwright で撮った実際のスクリーンショット（`public/works/`）。
+Works セクションのサムネイルは Playwright で撮った実際のレンダリング結果（`public/works/`）。
+モックアップや素材画像は使っていない。
 
 ### 技術構成
 

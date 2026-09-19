@@ -7,10 +7,14 @@
  * with the work, and a blocked or slow picsum made useTexture throw —
  * taking the whole homepage down with it (see WorksMount's boundary).
  *
- * Captured at 1600×1200 with Playwright against a production build.
+ * Captured at 1920×1080 with Playwright. The local routes are shot against
+ * a production build of this app; proofs.jpg is a render of the deployed
+ * PROOFS page's own shader, served locally because that deployment sits
+ * behind Vercel Authentication.
  */
 export const workImages: Record<string, string> = {
   "arechon-site": "/works/arechon-site.jpg",
+  proofs: "/works/proofs.jpg",
   showcase: "/works/showcase.jpg",
   motion: "/works/motion.jpg",
   grain: "/works/grain.jpg",

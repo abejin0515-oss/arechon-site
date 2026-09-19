@@ -31,6 +31,19 @@ export const works: Work[] = [
       "設計ドキュメントを先に書き切り、役割を分けた3つのエージェントに実装させて公開したポートフォリオ本体。指示と監査の手順そのものが制作物。",
   },
   {
+    slug: "proofs",
+    client: "Portfolio",
+    category: "WebGL lab",
+    title: "PROOFS — コードだけの表現集",
+    titleEn: "Proofs: everything is code",
+    year: 2026,
+    role: ["Direction", "Prompting"],
+    stack: ["GLSL", "Raymarching", "GPU Sim"],
+    href: "https://archeon-proofs.vercel.app",
+    summary:
+      "画像も動画も一枚も使わず、GLSL だけで質感を作る実験を8点。距離関数だけで描く金属球、GPU で解く波動方程式、自己増殖する反応拡散、1万2千個の粒子。すべてマウス・スクロール・クリックに反応する。",
+  },
+  {
     slug: "showcase",
     client: "Portfolio",
     category: "Technique study",
