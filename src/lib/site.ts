@@ -17,4 +17,4 @@ export const SITE_HOST = new URL(SITE_URL).host;
  * the agent definitions, the design spec and this page's own code all
  * live there. Requires the repository to be public on GitHub.
  */
-export const REPO_URL = "https://github.com/abejin0515-oss/arechon-site";
+export const REPO_URL = "https://github.com/abe-jin/arechon-site";
